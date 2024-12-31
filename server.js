@@ -8,7 +8,10 @@ const app = express();
 const port = 3000;
 
 // Enable CORS for all routes
-app.use(cors());
+app.use(cors({
+  origin: 'https://izify0665.github.io/notepad-web/' // replace with the URL of your frontend
+}));
+
 
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
@@ -18,11 +21,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // MySQL database connection
-const db = mysql.createConnection({
+const db = mysql.createConnection(process.env.CLEARDB_DATABASE_URL || {
   host: 'localhost',
   user: 'root',  // default MySQL username in XAMPP is 'root'
   password: '',  // default MySQL password in XAMPP is ''
-  database: 'notepad'
+  database: 'notepad'  // make sure 'notepad' exists locally in your MySQL
 });
 
 db.connect((err) => {
