@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000;
 
 // Enable CORS for all routes
 app.use(cors({
-  origin: 'https://izify0665.github.io/notepad-web/' // replace with the URL of your frontend
+  origin: '*', // This will allow any origin, useful for debugging but not recommended for production
 }));
 
 app.use(express.static(__dirname));
