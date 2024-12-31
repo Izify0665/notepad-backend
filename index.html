@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notepad</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+    .container {
+      padding: 20px;
+    }
+    .note {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .note h3 {
+      margin: 0;
+    }
+    .note p {
+      margin: 10px 0;
+    }
+    .delete-btn {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+    .delete-btn:hover {
+      background-color: darkred;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>My Notes</h1>
+  </header>
+
+  <div class="container">
+    <div id="notesList"></div>
+  </div>
+
+  <script>
+    // Function to fetch and display all notes
+    async function fetchNotes() {
+      try {
+        const response = await fetch('https://notepad-961b666cbfc0.herokuapp.com/'); // Replace with your backend URL
+        const notes = await response.json();
+
+        const notesList = document.getElementById('notesList');
+        notesList.innerHTML = ''; // Clear existing notes
+
+        // Loop through each note and create HTML
+        notes.forEach(note => {
+          const noteDiv = document.createElement('div');
+          noteDiv.classList.add('note');
+          
+          const noteTitle = document.createElement('h3');
+          noteTitle.textContent = note.title;
+          noteDiv.appendChild(noteTitle);
+          
+          const noteContent = document.createElement('p');
+          noteContent.textContent = note.content;
+          noteDiv.appendChild(noteContent);
+          
+          const deleteButton = document.createElement('button');
+          deleteButton.textContent = 'Delete';
+          deleteButton.classList.add('delete-btn');
+          deleteButton.onclick = () => deleteNote(note.id);
+          noteDiv.appendChild(deleteButton);
+          
+          notesList.appendChild(noteDiv);
+        });
+      } catch (error) {
+        console.error('Error fetching notes:', error);
+      }
+    }
+
+    // Function to delete a note
+    async function deleteNote(noteId) {
+      try {
+        const response = await fetch(`https://notepad-961b666cbfc0.herokuapp.com/${noteId}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          alert('Note deleted successfully');
+          fetchNotes(); // Refresh the notes list
+        } else {
+          alert('Failed to delete note');
+        }
+      } catch (error) {
+        console.error('Error deleting note:', error);
+      }
+    }
+
+    // Fetch the notes when the page loads
+    window.onload = fetchNotes;
+  </script>
+
+</body>
+</html>

@@ -12,8 +12,12 @@ app.use(cors({
   origin: 'https://izify0665.github.io/notepad-web/' // replace with the URL of your frontend
 }));
 
-// Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
+
+// Serve index.html when accessing the root URL
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // Middleware
 app.use(bodyParser.json());
